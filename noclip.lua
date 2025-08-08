@@ -1,24 +1,19 @@
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
 local player = Players.LocalPlayer
 
-local noclip = false
+-- Distância do teleporte (2 passos = ~6 studs)
+local teleportDistance = 6
 
--- Alterna noclip com a tecla N
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	if gameProcessed then return end
-
-	if input.KeyCode == Enum.KeyCode.N then
-		noclip = not noclip
-	end
-end)
-
-RunService.Stepped:Connect(function()
-	if noclip and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-		for _, part in pairs(player.Character:GetDescendants()) do
-			if part:IsA("BasePart") then
-				part.CanCollide = false
-			end
+	if input.KeyCode == Enum.KeyCode.T then
+		local character = player.Character
+		if character and character:FindFirstChild("HumanoidRootPart") then
+			local root = character.HumanoidRootPart
+			local forward = root.CFrame.LookVector
+			root.CFrame = root.CFrame + (forward * teleportDistance)
 		end
 	end
 end)
